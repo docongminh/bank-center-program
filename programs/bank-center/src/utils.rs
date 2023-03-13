@@ -8,7 +8,7 @@ pub fn transfer_native_pda_to_account<'info>(
     receive_account: AccountInfo<'info>,
     amount: u64
 ) -> Result<()> {
-    if **escrow_vault.try_borrow_lamports()? < amount {
+    if **escrow_vault.try_borrow_lamports()? < amount.into() {
         return Err(CustomError::InsufficientFunds.into());
     }
     **escrow_vault.try_borrow_mut_lamports()? -= amount;

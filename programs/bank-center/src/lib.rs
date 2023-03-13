@@ -21,7 +21,7 @@ pub mod bank_center {
         Ok(())
     }
 
-    pub fn deposit<'info>(
+    pub fn deposit_instruction<'info>(
         ctx: Context<'_, '_, '_, 'info, Deposit<'info>>,
         amount: u64
     ) -> Result<()> {
@@ -29,22 +29,28 @@ pub mod bank_center {
         Ok(())
     }
 
-    pub fn buy<'info>(ctx: Context<'_, '_, '_, 'info, Deposit<'info>>, amount: u64) -> Result<()> {
-        Ok(())
-    }
-
-    pub fn buy_discount<'info>(
-        ctx: Context<'_, '_, '_, 'info, Deposit<'info>>,
+    pub fn buy_instruction<'info>(
+        ctx: Context<'_, '_, '_, 'info, Buy<'info>>,
         amount: u64
     ) -> Result<()> {
+        buy(ctx, amount)?;
         Ok(())
     }
 
-    pub fn initialize_leaderboard(ctx: Context<LeaderboardData>) -> Result<()> {
+    pub fn buy_discount_instruction<'info>(
+        ctx: Context<'_, '_, '_, 'info, Buy<'info>>,
+        amount: u64,
+        discount: u32
+    ) -> Result<()> {
+        buy_discount(ctx, amount, discount)?;
         Ok(())
     }
 
-    pub fn update_score(ctx: Context<Initialize>) -> Result<()> {
+    pub fn initialize_leaderboard(_ctx: Context<LeaderboardData>) -> Result<()> {
+        Ok(())
+    }
+
+    pub fn update_score(_ctx: Context<Initialize>) -> Result<()> {
         Ok(())
     }
 }
