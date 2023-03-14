@@ -92,16 +92,15 @@ pub fn withdraw_sol_with_amount<'info>(
     let authority = ctx.accounts.authority.key();
     let mint = ctx.accounts.mint_address.key();
     let vault_bump = ctx.accounts.config_account.vault_bump;
-    let seeds = &[
+    let vault_seed = &[
         &[VAULT_PDA_SEED, authority.as_ref(), mint.as_ref(), bytemuck::bytes_of(&vault_bump)][..],
     ];
-    transfer_token_to_account(
-        ctx.accounts.escrow_token_account.to_account_info(),
-        ctx.accounts.withdraw_token_account.to_account_info(),
-        ctx.accounts.config_account.to_account_info(),
+    transfer_native_to_account(
+        ctx.accounts.escrow_vault.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
         amount,
-        ctx.accounts.token_program.to_account_info(),
-        Some(seeds)
+        ctx.accounts.system_program.to_account_info(),
+        Some(vault_seed)
     )?;
     Ok(())
 }
@@ -110,17 +109,16 @@ pub fn withdraw_sol_drain<'info>(ctx: Context<'_, '_, '_, 'info, Withdraw<'info>
     let authority = ctx.accounts.authority.key();
     let mint = ctx.accounts.mint_address.key();
     let vault_bump = ctx.accounts.config_account.vault_bump;
-    let seeds = &[
+    let vault_seed = &[
         &[VAULT_PDA_SEED, authority.as_ref(), mint.as_ref(), bytemuck::bytes_of(&vault_bump)][..],
     ];
     let amount = ctx.accounts.escrow_vault.lamports();
-    transfer_token_to_account(
-        ctx.accounts.escrow_token_account.to_account_info(),
-        ctx.accounts.withdraw_token_account.to_account_info(),
-        ctx.accounts.config_account.to_account_info(),
+    transfer_native_to_account(
+        ctx.accounts.escrow_vault.to_account_info(),
+        ctx.accounts.authority.to_account_info(),
         amount,
-        ctx.accounts.token_program.to_account_info(),
-        Some(seeds)
+        ctx.accounts.system_program.to_account_info(),
+        Some(vault_seed)
     )?;
     Ok(())
 }

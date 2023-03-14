@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-bank_center = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+bank_center = "3iUNmf8zTvnmFTCQyVpo3Kthz8Q1L7uPRvnskijdCJF2"
 
 [registry]
 url = "https://api.apr.dev"
