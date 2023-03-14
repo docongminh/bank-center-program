@@ -1,20 +1,4 @@
 use anchor_lang::prelude::*;
-
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
-pub struct Score {
-    pub user_address: Pubkey,
-    pub score: u64,
-}
-
-#[account]
-pub struct LeaderBoard {
-    pub scores: Vec<Score>,
-}
-
-impl LeaderBoard {
-    pub const LEN: usize = 8; // todo
-}
-
 #[account]
 pub struct ConfigAccount {
     pub escrow_bump: u8,

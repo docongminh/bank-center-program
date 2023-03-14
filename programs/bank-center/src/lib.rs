@@ -54,11 +54,33 @@ pub mod bank_center {
         Ok(())
     }
 
-    pub fn initialize_leaderboard(_ctx: Context<LeaderboardData>) -> Result<()> {
+    pub fn withdraw_token_instruction<'info>(
+        ctx: Context<'_, '_, '_, 'info, Withdraw<'info>>,
+        amount: u64
+    ) -> Result<()> {
+        withdraw_token_with_amount(ctx, amount)?;
         Ok(())
     }
 
-    pub fn update_score(_ctx: Context<Initialize>) -> Result<()> {
+    pub fn drain_withdraw_token_instruction<'info>(
+        ctx: Context<'_, '_, '_, 'info, Withdraw<'info>>
+    ) -> Result<()> {
+        withdraw_token_drain(ctx)?;
+        Ok(())
+    }
+
+    pub fn withdraw_sol_instruction<'info>(
+        ctx: Context<'_, '_, '_, 'info, Withdraw<'info>>,
+        amount: u64
+    ) -> Result<()> {
+        withdraw_sol_with_amount(ctx, amount)?;
+        Ok(())
+    }
+
+    pub fn drain_withdraw_sol_instruction<'info>(
+        ctx: Context<'_, '_, '_, 'info, Withdraw<'info>>
+    ) -> Result<()> {
+        withdraw_sol_drain(ctx)?;
         Ok(())
     }
 }
