@@ -18,8 +18,9 @@ pub struct Buy<'info> {
     )]
     pub escrow_token_account: Box<Account<'info, TokenAccount>>,
 
+    /// CHECK:
     #[account(mut,
-        seeds=[VAULT_PDA_SEED, authority.key().as_ref()],
+        seeds=[VAULT_PDA_SEED, authority.key().as_ref(), mint_address.key().as_ref()],
         bump = config_account.vault_bump
     )]
     pub escrow_vault: AccountInfo<'info>,
@@ -34,24 +35,25 @@ pub struct Buy<'info> {
     pub mint_address: Account<'info, Mint>,
     /// CHECK: This account use to check constraint
     pub authority: AccountInfo<'info>,
-
+    #[account(mut)]
     pub buyer: Signer<'info>,
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
 }
 
 pub fn buy(ctx: Context<Buy>, amount: u64) -> Result<()> {
-    let total_price = 0;
-    // Transfer SOL: Vault -> partner
+    let price = ctx.accounts.config_account.price;
+    let total_price = price * amount;
+    // Transfer SOL: buyer -> vault
     ctx.accounts.transfer_sol(total_price)?;
-    // Transfer SPL: partner -> creator
+    // Transfer SPL: escrow -> buyer
     ctx.accounts.transfer_token(amount)?;
 
     Ok(())
 }
 
-pub fn buy_discount(ctx: Context<Buy>, amount: u64, _discount: u32) -> Result<()> {
-    let total_price = 0;
+pub fn buy_discount(ctx: Context<Buy>, amount: u64, _discount: u64) -> Result<()> {
+    let total_price = 10;
     // Transfer SOL: Vault -> partner
     ctx.accounts.transfer_sol(total_price)?;
     // Transfer SPL: partner -> creator
@@ -76,7 +78,7 @@ impl<'info> Buy<'info> {
         let mint_address = self.mint_address.key();
         let escrow_seed = &[
             &[
-                ESCROW_PDA_SEED,
+                CONFIG_PDA_SEED,
                 authority_key.as_ref(),
                 mint_address.as_ref(),
                 bytemuck::bytes_of(&self.config_account.escrow_bump),
