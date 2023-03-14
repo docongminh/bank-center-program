@@ -24,10 +24,15 @@ pub struct Initialize<'info> {
         space = ConfigAccount::LEN
     )]
     pub config_account: Box<Account<'info, ConfigAccount>>,
-    #[account(mut)]
+    /// CHECK:
+    #[account(mut,
+        seeds=[VAULT_PDA_SEED, authority.key().as_ref(), mint_address.key().as_ref()],
+        bump
+    )]
     pub escrow_vault: AccountInfo<'info>,
     #[account(mut, token::mint = mint_address, token::authority = withdraw_wallet)]
     pub withdraw_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK:
     #[account(constraint = withdraw_wallet.lamports() > 0 && withdraw_wallet.data_is_empty() @ CustomError::InvalidOwner)]
     pub withdraw_wallet: AccountInfo<'info>,
     pub mint_address: Account<'info, Mint>,
@@ -40,12 +45,12 @@ pub struct Initialize<'info> {
 
 pub fn handler_init<'info>(
     ctx: Context<'_, '_, '_, 'info, Initialize<'info>>,
-    price: u32
+    price: u64
 ) -> Result<()> {
     let config_account = &mut ctx.accounts.config_account;
-    let vault_bump = *ctx.bumps.get("vault_pda_seed").unwrap();
-    config_account.escrow_bump = *ctx.bumps.get("escrow_pda_seed").unwrap();
-    config_account.config_bump = *ctx.bumps.get("config_pda_seed").unwrap();
+    let vault_bump = *ctx.bumps.get("config_account").unwrap();
+    config_account.escrow_bump = *ctx.bumps.get("escrow_token_account").unwrap();
+    config_account.config_bump = *ctx.bumps.get("escrow_vault").unwrap();
     config_account.vault_bump = vault_bump;
     config_account.mint_address = ctx.accounts.mint_address.key();
     config_account.authority = ctx.accounts.authority.key();
@@ -61,8 +66,14 @@ pub fn handler_init<'info>(
 impl<'info> Initialize<'info> {
     fn create_native_account_vault(&self, vault_bump: u8) -> Result<()> {
         let authority_key = self.authority.key();
+        let mint_address = self.mint_address.key();
         let vault_seed = &[
-            &[VAULT_PDA_SEED, authority_key.as_ref(), bytemuck::bytes_of(&vault_bump)][..],
+            &[
+                VAULT_PDA_SEED,
+                authority_key.as_ref(),
+                mint_address.as_ref(),
+                bytemuck::bytes_of(&vault_bump),
+            ][..],
         ];
         // assign vault account for system program rather than itself program id
         create_account(
