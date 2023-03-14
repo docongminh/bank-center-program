@@ -13,7 +13,7 @@ pub struct LeaderboardData<'info> {
 pub fn update_score<'info>(
     ctx: Context<'_, '_, '_, 'info, LeaderboardData<'info>>,
     user_address: Pubkey,
-    score: u32
+    score: u64
 ) {
     let leaderboard_account = &mut ctx.accounts.leaderboard_account;
 

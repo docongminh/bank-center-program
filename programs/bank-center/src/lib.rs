@@ -7,17 +7,25 @@ pub mod instructions;
 use crate::instructions::*;
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("3iUNmf8zTvnmFTCQyVpo3Kthz8Q1L7uPRvnskijdCJF2");
 
 #[program]
 pub mod bank_center {
     use super::*;
 
-    pub fn initialize<'info>(
+    pub fn init_instruction<'info>(
         ctx: Context<'_, '_, '_, 'info, Initialize<'info>>,
-        price: u32
+        price: u64
     ) -> Result<()> {
         handler_init(ctx, price)?;
+        Ok(())
+    }
+
+    pub fn update_config_instruction<'info>(
+        ctx: Context<'_, '_, '_, 'info, UpdateConfig<'info>>,
+        price: u64
+    ) -> Result<()> {
+        handler_update_config(ctx, price)?;
         Ok(())
     }
 
@@ -40,7 +48,7 @@ pub mod bank_center {
     pub fn buy_discount_instruction<'info>(
         ctx: Context<'_, '_, '_, 'info, Buy<'info>>,
         amount: u64,
-        discount: u32
+        discount: u64
     ) -> Result<()> {
         buy_discount(ctx, amount, discount)?;
         Ok(())

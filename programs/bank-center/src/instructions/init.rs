@@ -58,6 +58,7 @@ pub fn handler_init<'info>(
     config_account.withdraw_wallet = ctx.accounts.withdraw_wallet.key();
     config_account.price = price;
 
+    // escrow wallet hold sol
     ctx.accounts.create_native_account_vault(vault_bump)?;
 
     Ok(())
