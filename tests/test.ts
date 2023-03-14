@@ -105,19 +105,79 @@ import { BankCenter } from "../target/types/bank_center";
   //   .rpc();
   // console.log("deposit: ", { signature2 });
 
-  const signature = await program.methods
-    .buyInstruction(new anchor.BN(2))
+  // const signature = await program.methods
+  //   .buyInstruction(new anchor.BN(2))
+  //   .accounts({
+  //     escrowTokenAccount: escrowTokenAccount,
+  //     escrowVault: escrowVault,
+  //     configAccount: configAccount,
+  //     buyerTokenAccount: associatedAccount,
+  //     buyer: authority.publicKey,
+  //     mintAddress: mintAddress,
+  //     authority: authority.publicKey,
+  //     tokenProgram: TOKEN_PROGRAM_ID,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc();
+  // console.log("buy: ", { signature });
+
+  // const withdrawSol = await program.methods
+  //   .withdrawSolInstruction(new anchor.BN(anchor.web3.LAMPORTS_PER_SOL))
+  //   .accounts({
+  //     escrowTokenAccount: escrowTokenAccount,
+  //     escrowVault: escrowVault,
+  //     configAccount: configAccount,
+  //     mintAddress: mintAddress,
+  //     withdrawTokenAccount: associatedAccount,
+  //     authority: authority.publicKey,
+  //     tokenProgram: TOKEN_PROGRAM_ID,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc();
+  // console.log("buy: ", { withdrawSol });
+
+  // const withdrawSol = await program.methods
+  //   .drainWithdrawSolInstruction()
+  //   .accounts({
+  //     escrowTokenAccount: escrowTokenAccount,
+  //     escrowVault: escrowVault,
+  //     configAccount: configAccount,
+  //     mintAddress: mintAddress,
+  //     withdrawTokenAccount: associatedAccount,
+  //     authority: authority.publicKey,
+  //     tokenProgram: TOKEN_PROGRAM_ID,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc();
+  // console.log("buy: ", { withdrawSol });
+
+  // const withdrawToken = await program.methods
+  //   .withdrawTokenInstruction(new anchor.BN(1))
+  //   .accounts({
+  //     escrowTokenAccount: escrowTokenAccount,
+  //     escrowVault: escrowVault,
+  //     configAccount: configAccount,
+  //     mintAddress: mintAddress,
+  //     withdrawTokenAccount: associatedAccount,
+  //     authority: authority.publicKey,
+  //     tokenProgram: TOKEN_PROGRAM_ID,
+  //     systemProgram: anchor.web3.SystemProgram.programId,
+  //   })
+  //   .rpc();
+  // console.log("withdrawToken: ", { withdrawToken });
+
+  const withdrawToken = await program.methods
+    .drainWithdrawTokenInstruction()
     .accounts({
       escrowTokenAccount: escrowTokenAccount,
       escrowVault: escrowVault,
       configAccount: configAccount,
-      buyerTokenAccount: associatedAccount,
-      buyer: authority.publicKey,
       mintAddress: mintAddress,
+      withdrawTokenAccount: associatedAccount,
       authority: authority.publicKey,
       tokenProgram: TOKEN_PROGRAM_ID,
       systemProgram: anchor.web3.SystemProgram.programId,
     })
     .rpc();
-  console.log("buy: ", { signature });
+  console.log("withdrawToken: ", { withdrawToken });
 })();
